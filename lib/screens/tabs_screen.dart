@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../providers/routes.dart';
 import './routes_screen.dart';
@@ -19,6 +20,12 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   late List<Map<String, Object>> _pages;
   int _selectedPageIndex = 0;
+
+  void setupPushNotifications() async {
+    final messaging = FirebaseMessaging.instance;
+    await messaging.requestPermission();
+    messaging.subscribeToTopic('Test');
+  }
 
   @override
   void initState() {
@@ -41,6 +48,7 @@ class _TabsScreenState extends State<TabsScreen> {
       },
     ];
     super.initState();
+    setupPushNotifications();
   }
 
   void _selectPage(int index) {

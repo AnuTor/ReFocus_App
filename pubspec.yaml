@@ -39,6 +39,7 @@ dependencies:
   sleek_circular_slider: ^2.0.1
   intl: ^0.18.1
   modal_bottom_sheet: ^2.0.0
+  firebase_messaging:
 
 dev_dependencies:
   flutter_test:

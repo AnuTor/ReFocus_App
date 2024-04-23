@@ -50,9 +50,35 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _isLoading = false;
       });
-    } catch (err) {
+    } on FirebaseAuthException catch (err) {
+      var message = 'Ocurrió un error inesperado.';
+      switch (err.code) {
+        case 'invalid-email':
+          message =
+              'El mail ingresado es incorrecto. Por favor intente nuevamente';
+          break;
+        case 'user-disabled':
+          message = 'El mail ingresado se encuentra deshabilitado.';
+          break;
+        case 'user-not-found':
+          message =
+              'El mail ingresado es incorrecto. Por favor intente nuevamente.';
+          break;
+        case 'wrong-password':
+          message =
+              'La contraseña ingresada es incorrecta. Por favor intente nuevamente.';
+          break;
+        default:
+          break;
+      }
       setState(() {
         _isLoading = false;
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: Theme.of(ctx).errorColor,
+          ),
+        );
       });
     }
   }
@@ -60,24 +86,23 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {return false;},
+      onWillPop: () async {
+        return false;
+      },
       child: Scaffold(
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.asset(
-              'assets/images/refocus-fondo.png',
-              fit: BoxFit.cover,
+        body: Stack(fit: StackFit.expand, children: [
+          Image.asset(
+            'assets/images/refocus-fondo.png',
+            fit: BoxFit.cover,
+          ),
+          Center(
+            child: LoginForm(
+              key: const ValueKey('LoginForm'),
+              submitFn: _submitLoginForm,
+              isLoading: _isLoading,
             ),
-            Center(
-              child: LoginForm(
-                key: const ValueKey('LoginForm'),
-                submitFn: _submitLoginForm,
-                isLoading: _isLoading,
-              ),
-            ),
-          ]
-        ),
+          ),
+        ]),
       ),
     );
   }

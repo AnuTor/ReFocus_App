@@ -22,7 +22,6 @@ class ActivityElement extends StatefulWidget {
 }
 
 class _ActivityElementState extends State<ActivityElement> {
-
   @override
   void initState() {
     super.initState();
@@ -56,65 +55,79 @@ class _ActivityElementState extends State<ActivityElement> {
   Widget build(BuildContext context) {
     final ButtonStyle style = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 22),
-      shape: widget.enable 
-        ? CircleBorder(side: BorderSide(width: 3, color: Theme.of(context).primaryColor))
-        : const CircleBorder(),
+      shape: widget.enable
+          ? CircleBorder(
+              side: BorderSide(width: 3, color: Theme.of(context).primaryColor))
+          : const CircleBorder(),
       //fixedSize: Size(60, 60),
       padding: const EdgeInsets.all(15),
       backgroundColor: widget.activity.done ? null : Colors.grey.shade200,
     );
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: ElevatedButton(
-            onPressed: widget.enable
-                ? () => {
-                      Navigator.of(context).pushNamed(
-                        ActivityScreen.routeName,
-                        arguments: {
-                          'path': widget.path,
-                          'activity': widget.activity
-                        },
-                      ).whenComplete(() => setState(() {
-                            refreshDone();
-                          })),
-                    }
-                : null,
-            style: style,
-            child: widget.enable
-                ? Text((widget.activity.id-1).toString())
-                : const Icon(Icons.lock),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: widget.enable
+          ? () => {
+                Navigator.of(context).pushNamed(
+                  ActivityScreen.routeName,
+                  arguments: {'path': widget.path, 'activity': widget.activity},
+                ).whenComplete(() => setState(() {
+                      refreshDone();
+                    })),
+              }
+          : null,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: ElevatedButton(
+              onPressed: widget.enable
+                  ? () => {
+                        Navigator.of(context).pushNamed(
+                          ActivityScreen.routeName,
+                          arguments: {
+                            'path': widget.path,
+                            'activity': widget.activity
+                          },
+                        ).whenComplete(() => setState(() {
+                              refreshDone();
+                            })),
+                      }
+                  : null,
+              style: style,
+              child: widget.enable
+                  ? Text((widget.activity.id - 1).toString())
+                  : const Icon(Icons.lock),
+            ),
           ),
-        ),
-        const SizedBox(
-          width: 20,
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.activity.title,
-                overflow: TextOverflow.fade,
-                softWrap: false,
-                maxLines: 1,
-              ),
-              widget.activity.audio
-                  ? const Text(
-                      'Audio',
-                      style: TextStyle(color: Colors.grey),
-                    )
-                  : const Text(
-                      'Texto',
-                      style: TextStyle(color: Colors.grey),
-                    )
-            ],
+          const SizedBox(
+            width: 20,
           ),
-        )
-      ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.activity.title,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  maxLines: 1,
+                ),
+                widget.activity.audio
+                    ? const Text(
+                        'Audio',
+                        style: TextStyle(color: Colors.grey),
+                      )
+                    : const Text(
+                        'Texto',
+                        style: TextStyle(color: Colors.grey),
+                      )
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

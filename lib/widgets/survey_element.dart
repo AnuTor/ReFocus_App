@@ -24,7 +24,6 @@ class SurveyElement extends StatefulWidget {
 }
 
 class _SurveyElementState extends State<SurveyElement> {
-
   @override
   void initState() {
     super.initState();
@@ -60,62 +59,77 @@ class _SurveyElementState extends State<SurveyElement> {
   Widget build(BuildContext context) {
     return AbsorbPointer(
       absorbing: widget.survey.done,
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0),
-            child: ElevatedButton(
-              onPressed: widget.enable
-                  ? () => {
-                      Navigator.of(context).pushNamed(
-                        SurveyScreen.routeName,
-                        arguments: {
-                          'path': widget.path,
-                          'survey': widget.survey
-                        },
-                      ).whenComplete(() => setState(() {
-                            refreshDone();
-                          })),
-                    }
-                  : null,
-              style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 22),
-                  shape: widget.enable 
-                    ? const CircleBorder(side: BorderSide(width: 3, color: Color(0xFFF9A826)))
-                    : const CircleBorder(),
-                  //shape: const CircleBorder(),
-                  backgroundColor: (widget.enable && !widget.survey.done)
-                    ? Colors.grey.shade200
-                    : const Color(0xFFF9A826),
-                  padding: const EdgeInsets.all(15)),
-              child: widget.enable
-                  ? (widget.survey.done
-                      ? const Icon(Icons.check)
-                      : Text(widget.num.toString()))
-                  : const Icon(Icons.lock),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: widget.enable
+            ? () => {
+                  Navigator.of(context).pushNamed(
+                    SurveyScreen.routeName,
+                    arguments: {'path': widget.path, 'survey': widget.survey},
+                  ).whenComplete(() => setState(() {
+                        refreshDone();
+                      })),
+                }
+            : null,
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: ElevatedButton(
+                onPressed: widget.enable
+                    ? () => {
+                          Navigator.of(context).pushNamed(
+                            SurveyScreen.routeName,
+                            arguments: {
+                              'path': widget.path,
+                              'survey': widget.survey
+                            },
+                          ).whenComplete(() => setState(() {
+                                refreshDone();
+                              })),
+                        }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 22),
+                    shape: widget.enable
+                        ? const CircleBorder(
+                            side:
+                                BorderSide(width: 3, color: Color(0xFFF9A826)))
+                        : const CircleBorder(),
+                    //shape: const CircleBorder(),
+                    backgroundColor: (widget.enable && !widget.survey.done)
+                        ? Colors.grey.shade200
+                        : const Color(0xFFF9A826),
+                    padding: const EdgeInsets.all(15)),
+                child: widget.enable
+                    ? (widget.survey.done
+                        ? const Icon(Icons.check)
+                        : Text(widget.num.toString()))
+                    : const Icon(Icons.lock),
+              ),
             ),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Cuestionario',
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  maxLines: 1,
-                ),
-                Text(
-                  '${widget.survey.questions.length} preguntas',
-                  style: const TextStyle(color: Colors.grey),
-                )
-              ],
+            const SizedBox(
+              width: 20,
             ),
-          ),
-        ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Cuestionario',
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                    maxLines: 1,
+                  ),
+                  Text(
+                    '${widget.survey.questions.length} preguntas',
+                    style: const TextStyle(color: Colors.grey),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
